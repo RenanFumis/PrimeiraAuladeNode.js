@@ -6,6 +6,7 @@ const {
   deleteUser,
   updateUsers,
 } = require("./controllers/users.js");
+const verifyToken = require("./middlewares/authMiddleware.js");
 const routes = Router();
 
 routes.get("/health", (request, response) => {
@@ -16,17 +17,18 @@ routes.get("/health", (request, response) => {
     );
 });
 
-//Criando uma rota post para inserir um novo usuário
-routes.post("/users", createUsers);
-
 routes.get("/users", listUsers);
 
 routes.get("/users/:id", listUserDetail);
 
+//Rotas abaixo precisam de autenticação
+//Criando uma rota post para inserir um novo usuário
+routes.post("/users", verifyToken, createUsers);
+
 //rota para deletar usuário
-routes.delete("/users/:id", deleteUser);
+routes.delete("/users/:id", verifyToken, deleteUser);
 
 //rota para atualizar usuário
-routes.put("/users/:id", updateUsers);
+routes.put("/users/:id", verifyToken, updateUsers);
 
 module.exports = routes;
