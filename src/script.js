@@ -40,23 +40,42 @@ app.get("/users/:id", (request, response) => {
   const currentUser = users.find(
     (user) => user.id === parseInt(request.params.id)
   );
-//validando se o usuário existe
+  //validando se o usuário existe
   if (!currentUser) response.send("Usuário não encontrado");
 
   response.send(currentUser);
 });
 
 //rota para deletar usuário
-app.delete("/users/:id", (request, response) =>{
+app.delete("/users/:id", (request, response) => {
   const index = users.findIndex(
     (user) => user.id === parseInt(request.params.id)
-  )
-    if(index === -1) response.send("Não foi encontrado nenhum usuário")
-    users.splice(0 , index)
+  );
+  if (index === -1) response.send("Não foi encontrado nenhum usuário");
+  users.splice(0, index);
 
-    response.send("Usuário deletado com sucesso")
-    
-  response.send(currentUser)
-})
+  response.send("Usuário deletado com sucesso");
+
+  response.send(currentUser);
+});
+
+//rota para atualizar usuário
+app.put("/users/:id", (request, response) => {
+  const { age, name } = request.body;
+  const index = users.findIndex(
+    (user) => user.id === parseInt(request.params.id)
+  );
+  if (index === -1) response.send("Não foi encontrado nenhum usuário");
+
+  const updateUsers = {
+    id: users[index].id,
+    name: name,
+    age: age,
+  };
+
+  users[index] = updateUsers;
+
+  response.send(updateUsers);
+});
 
 app.listen(3001);
